@@ -3,7 +3,7 @@ import g2o
 
 class MonoBA(g2o.SparseOptimizer):
     def __init__(self):
-        super().__ini__()
+        super().__init__()
 
         solver = g2o.BlockSolverSE3(g2o.LinearSolverCSparseSE3())
         solver = g2o.OptimizationAlgorithmLevenberg(solver)
@@ -16,7 +16,7 @@ class MonoBA(g2o.SparseOptimizer):
         self.delta = np.sqrt(5.991)
         self.aborted = False
 
-    def set_cam(self, focal_length, principal_point):
+    def set_camera(self, focal_length, principal_point):
         cam = g2o.CameraParameters(focal_length, principal_point, 0)
         cam.set_id(0)
         super().add_parameter(cam)
@@ -29,7 +29,7 @@ class MonoBA(g2o.SparseOptimizer):
         finally:
             self.aborted = False
 
-    def add_pose(self, pose_id, pose, cam, fixed=False):
+    def add_pose(self, pose_id, pose, fixed=False):
         v_se3 = g2o.VertexSE3Expmap()
         v_se3.set_id(pose_id * 2)
         v_se3.set_estimate(pose)
@@ -44,10 +44,11 @@ class MonoBA(g2o.SparseOptimizer):
         v_p.set_fixed(fixed)
         super().add_vertex(v_p)
 
-    def add_edge(self, id, point_id, pose_id, meas, info=np.identity(3)):
-        edge = g2o.EdgeProjectXYZ2UV()
+    def add_edge(self, id, point_id, pose_id, meas, info=np.identity(2)*0.5):
+        edge = g2o.EdgeProjectP2MC()
         edge.set_vertex(0, self.vertex(point_id * 2 + 1))
         edge.set_vertex(1, self.vertex(pose_id * 2))
+        edge.set_id(id)
         edge.set_measurement(meas)
         edge.set_information(info)
         kernel = g2o.RobustKernelHuber()
@@ -58,7 +59,7 @@ class MonoBA(g2o.SparseOptimizer):
         return self.vertex(id * 2).estimate()
 
     def get_point(self, id):
-        return self.vertex(id * 2).estimate()
+        return self.vertex(id * 2 + 1).estimate()
 
     def abort(self):
         self.aborted = True
