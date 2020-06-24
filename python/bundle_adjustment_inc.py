@@ -54,7 +54,7 @@ def main(input_num=5, f=1000, cx=320, cy=240):
             ba.add_edge(edge_id, j, i, xss[j])
             edge_id += 1
     
-    ba.optimize()
+        ba.optimize()
 
     with open("output/bundle_adjustment_inc(point).xyz", "w") as fpts:
         for i in range(X.shape[0]):
