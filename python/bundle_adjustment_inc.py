@@ -52,6 +52,7 @@ def main(input_num=5, f=1000, cx=320, cy=240):
 
         for j in range(xss.shape[0]):
             ba.add_edge(edge_id, j, i, xss[j])
+            edge_id += 1
     
     ba.optimize()
 
