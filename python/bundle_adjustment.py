@@ -46,12 +46,12 @@ class MonoBA(g2o.SparseOptimizer):
 
     def add_edge(self, id, point_id, pose_id, meas, info=np.identity(2)*0.5):
         edge = g2o.EdgeProjectP2MC()
+        edge.set_id(id)
         edge.set_vertex(0, self.vertex(point_id * 2 + 1))
         edge.set_vertex(1, self.vertex(pose_id * 2))
-        edge.set_id(id)
         edge.set_measurement(meas)
         edge.set_information(info)
-        kernel = g2o.RobustKernelHuber()
+        kernel = g2o.RobustKernelHuber(self.delta)
         edge.set_robust_kernel(kernel)
         super().add_edge(edge)
 
