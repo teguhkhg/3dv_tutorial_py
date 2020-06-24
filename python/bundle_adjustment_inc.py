@@ -7,7 +7,7 @@ from bundle_adjustment import MonoBA
 
 def main(input_num=5, f=1000, cx=320, cy=240):
     K = np.array([[f, 0, cx],
-                  [f, cy, 0],
+                  [0, f, cy],
                   [0, 0, 1]])
 
     xs = []
