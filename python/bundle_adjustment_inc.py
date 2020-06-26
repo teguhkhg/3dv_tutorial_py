@@ -20,7 +20,7 @@ def main(input_num=5, f=1000, cx=320, cy=240):
         xs.append(pts)
     xs = np.asarray(xs)
 
-    F, inliers = cv2.findFundamentalMat(xs[0], xs[1])
+    F, inliers = cv2.findFundamentalMat(xs[0], xs[1], cv2.FM_8POINT)
     E = np.dot(K.T, F).dot(K)
     _, R, t, inliers = cv2.recoverPose(E, xs[0], xs[1], K)
 
