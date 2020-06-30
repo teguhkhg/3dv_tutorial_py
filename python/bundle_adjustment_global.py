@@ -1,11 +1,11 @@
 import cv2
 import numpy as np
-import glob
-import g2o
 
-from bundle_adjustment import MonoBA
+def g2o_main(input_num, f, cx, cy):
+    import g2o
 
-def main(input_num=5, f=1000, cx=320, cy=240):
+    from bundle_adjustment import MonoBA
+
     xs = []
     for i in range(input_num):
         pts = []
@@ -43,6 +43,14 @@ def main(input_num=5, f=1000, cx=320, cy=240):
             # p = X[i]
             fpts.write("%f %f %f\n" % (p[0], p[1], p[2]))
         
+def opensfm_main(input_num, f, cx, cy):
+    pass
+
+def main(ver, input_num=5, f=1000, cx=320, cy=240):
+    if ver == "g2o":
+        g2o_main(input_num, f, cx, cy)
+    elif ver == "opensfm":
+        opensfm_main(input_num, f, cx, cy)
 
 if __name__ == "__main__":
-    main()
+    main("g2o")
